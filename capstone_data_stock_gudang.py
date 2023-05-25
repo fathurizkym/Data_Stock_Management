@@ -105,7 +105,7 @@ def add():
                             ]
                         })
                         add()
-                    elif yakin == "T":
+                    elif yakin == "TT":
                         add()
                     else :
                         print("Input yang anda masukan salah!!! Input (Y/T) ")
