@@ -1,30 +1,24 @@
 # Nama : Fathur Rizky Maulana
 # Capstone Project Modul 1 - Data Stock Gudang
-# Data stock Gudang dengan features : Kode Barang, Nama Barang, Stock Awal, Stock In, Stock Out, Stock Akhir, Transaction Date
+# Data stock Gudang dengan features : Index, Kode Barang, Nama Barang, Stock Awal, Stock In, Stock Out, Stock Akhir, Transaction Date
 
 import sys
 import datetime as dt
+import pyinputplus as pypi
 
 # Fungsi menampilkan tanggal sekarang dan petugas gudang
 def heading(nama):
     print("=" * 50)
     print(f"\nTanggal : {dt.date.today()} \nPetugas Gudang : {nama}")
 
-# Fungsi untuk merapihkan format tabel dictStockGdg
-def printFormat(dictFormat):
-    for key, value in dictFormat.items():
-        if key == "column":
-            print(f"| {dictFormat[key][0]}\t | {dictFormat[key][1]} \t | {dictFormat[key][2]} \t | {dictFormat[key][3]}\t | {dictFormat[key][4]}\t | {dictFormat[key][5]}\t | {dictFormat[key][6]}\t | {dictFormat[key][7]} | ")
-        else:
-            print(f"| {dictFormat[key][0]}\t | {dictFormat[key][1]} \t | {dictFormat[key][2]} \t | {dictFormat[key][3]}\t\t | {dictFormat[key][4]}\t\t | {dictFormat[key][5]}\t\t | {dictFormat[key][6]}\t\t | {dictFormat[key][7]}\t    | ")
-
 # Fungsi menampilkan update stock gudang 
-def show(Dict):
-    heading(inputPtgs)
+def show(Dict, printFormat):
+    heading()
     print("\nUpdate Laporan Stock Barang PT. XYZ\n")
-    printFormat(Dict)
+    for value in Dict.values():
+        print(printFormat.format("", *value))
 
-# Fungsi menampilkan menu nomor 1 Report Stock Gudang (Read)
+# Fungsi menjalankan menu nomor 1 Report Stock Gudang (Read)
 def report():
     heading(inputPtgs)
     while True:
@@ -39,7 +33,7 @@ def report():
 
         menuReportGdg = int(input("Masukan Nomor Pilihan (1-3) : "))
         if menuReportGdg == 1:
-            show(dictStockGdg)
+            show(dictStockGdg, printFormat)
         elif menuReportGdg == 2:
             showDataUnique()
         elif menuReportGdg == 3:
@@ -48,19 +42,19 @@ def report():
             print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
             continue
 
-# Fungsi menampilkan menu nomor 1.2 menampilkan data tertentu di gudang
+# Fungsi menjalankan menu nomor 1.2 menampilkan data tertentu di gudang
 def showDataUnique():
     inputNamaBarang = input("Masukan Nama Barang Yang Dicari : ").title()
     for i, value in enumerate(dictStockGdg.values()):
         if inputNamaBarang in value:
             print("-----Info Barang Yang Dicari-----")
-            print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}""")
+            print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}\n""")
             break
         elif i == len(dictStockGdg) - 1:
             print(f"***Barang {inputNamaBarang} tidak dapat ditemukan***")
             report()
         
-# Fungsi menampilkan menu nomor 2
+# Fungsi menjalankan menu nomor 2 Menambah barang baru di gudang
 def add():
     heading(inputPtgs)
     while True:
@@ -110,13 +104,13 @@ def add():
                     else :
                         print("Input yang anda masukan salah!!! Input (Y/T) ")
         elif menuAdd == 2 :
-            show(dictStockGdg)        
+            show(dictStockGdg, printFormat)        
         elif menuAdd == 3 :
             main()
         else:
             print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
             
-# Fungsi menampilkan menu nomor 3
+# Fungsi menjalankan menu nomor 3 Transaksi stock gudang
 def transaction():
     heading(inputPtgs)
     while True:
@@ -190,7 +184,7 @@ def transaction():
                     print(f"***Barang tidak dapat ditemukan***")
 
         elif menuTransaksi == 3:
-            show(dictStockGdg)
+            show(dictStockGdg, printFormat)
 
         elif menuTransaksi == 4:
             main()
@@ -198,7 +192,7 @@ def transaction():
         else:
             print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
 
-# Fungsi Menampilkan menu nomor 4
+# Fungsi menjalankan menu nomor 4 Menghapus barang lama gudang
 def delete():
     print("\n*** Menu ini akan satu data secara keseluruhan ***")
     while True:
@@ -248,7 +242,7 @@ def delete():
                     print(f"***{noDelete} tidak dapat ditemukan***")
                     delete()
         elif menuAdd == 2 :
-            show(dictStockGdg)        
+            show(dictStockGdg, printFormat)        
         elif menuAdd == 3 :
             main()
         else:
@@ -263,14 +257,16 @@ def main():
 -----Selamat Datang di Aplikasi Gudang PT.XYZ-----
 
         Pilihan Menu :
-        1. Report stock gudang
-        2. Menambah Stock Baru Gudang
+        1. Report Stock Gudang
+        2. Menambah Barang Baru Gudang
         3. Transaksi Stock Gudang
-        4. Menghapus stock Gudang
+        4. Menghapus Barang Lama Gudang
         5. Exit
     """
     )
-        menuNumber = int(input("Masukan Nomor Pilihan (1-5): "))
+        menuNumber = pypi.inputInt(
+            prompt="Masukan Nomor Pilihan (1-5): ",
+            lessThan=6)
         if menuNumber == 1:
             report()
         elif menuNumber == 2:
@@ -280,7 +276,7 @@ def main():
         elif menuNumber == 4:
             delete()
         elif menuNumber == 5:
-            print("\n~~~Terimakasih~~~\nProgram made by : fathurizkym")
+            print("\n~~~~Terimakasih~~~~\nProgram made by : fathurizkym")
             sys.exit()
         else:
             print("Nomor menu yang dipilih tidak sesuai.\nMasukan nomor sesuai yang tertera diatas")
@@ -288,13 +284,31 @@ def main():
 if __name__ == "__main__":
     # Dictionary stock Gudang
     dictStockGdg = {
-        "column" : ["Index", "Kode Barang", "Nama Barang", "Stock Awal", "Stock In", "Stock Out", "Stock Akhir", "Transaction Date"],
+        "column" : ["Index", "Kode Barang", "Nama Barang", "Stock Awal", "Stock In", "Stock Out", "Stock Akhir", "Date"],
         "item-0" : [0, "FRM-0", "Barang A", 10, 0, 0, 10, dt.date(2023,1,1).strftime("%d-%m-%Y")],
         "item-1" : [1, "FRM-1", "Barang B", 20, 0, 0, 20, dt.date(2023,1,2).strftime("%d-%m-%Y")],
         "item-2" : [2, "FRM-2", "Barang C", 15, 0, 0, 15, dt.date(2023,1,3).strftime("%d-%m-%Y")],
     }
- 
-    inputPtgs = input("Masukan Nama Petugas Jaga : ").title()
 
-    # Menjalankan Program Data Stock Gudang
-    main()
+    petugasGudang = ["Fathur Rizky Maulana", 
+        "Fitra Fauzan", 
+        "Andi Nurmansyah", 
+        "Harits Ramadhan", 
+        "Rona Mardiana",
+    ]
+
+    printFormat = '{:<2}' + '{:<10}' * (len(dictStockGdg["column"]))
+
+    while True:
+        inputPtgs = pypi.inputStr(
+            prompt="\nMasukan Nama Petugas Jaga : ",
+            applyFunc=lambda x: x.title(),
+            blockRegexes="0123456789")
+       
+        if inputPtgs in petugasGudang:
+            print(f"\nLogin sukses\nNama petugas gudang : {inputPtgs}")
+            main()
+            break
+        else:
+            print(f"Nama anda ({inputPtgs}) tidak ada dalam database petugas gudang kami")
+            print(f"Silahkan minta izin ke petugas gudang kami : \n{petugasGudang}")
