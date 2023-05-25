@@ -31,7 +31,7 @@ def report():
     3. Kembali ke menu utama
     """)
 
-        menuReportGdg = int(input("Masukan Nomor Pilihan (1-3) : "))
+        menuReportGdg = pypi.inputInt(prompt="Masukan Nomor Pilihan (1-3) : ", lessThan=4)
         if menuReportGdg == 1:
             show(dictStockGdg, printFormat)
         elif menuReportGdg == 2:
@@ -44,7 +44,7 @@ def report():
 
 # Fungsi menjalankan menu nomor 1.2 menampilkan data tertentu di gudang
 def showDataUnique():
-    inputNamaBarang = input("Masukan Nama Barang Yang Dicari : ").title()
+    inputNamaBarang = pypi.inputStr(prompt="Masukan Nama Barang Yang Dicari : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
     for i, value in enumerate(dictStockGdg.values()):
         if inputNamaBarang in value:
             print("-----Info Barang Yang Dicari-----")
@@ -58,7 +58,7 @@ def showDataUnique():
 def add():
     heading(inputPtgs)
     while True:
-        menuAdd = int(input("""
+        menuAdd = pypi.inputInt(prompt="""
 ----------Menu Menambahkan Stock Gudang----------
         
     Pilihan menu menambahkan stock gudang : 
@@ -66,11 +66,11 @@ def add():
     2. Menampilkan semua data stock di gudang
     3. Kembali ke menu utama
     
-    Masukan Nomor Pilihan (1-3) : """))
+    Masukan Nomor Pilihan (1-3) : """, lessThan=4)
         
         if menuAdd == 1:
             # show(dictStockGdg)
-            addBarang = input("Masukan nama barang yang ingin ditambahkan : ").title()
+            addBarang = pypi.inputStr(prompt="Masukan nama barang yang ingin ditambahkan : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.copy().values()):
                 if addBarang in value:
                     print(f"***{addBarang} sudah ada di dalam database***")
@@ -78,7 +78,17 @@ def add():
                     break
                 elif i == len(dictStockGdg) - 1:
                     print("Silahkan input barang yang ingin dimasukan")
-                    kodeBarang = input("Kode Barang  : ").upper()
+                    while True:
+                        kodeBarang = input("Kode Barang  : ").upper()
+                        if kodeBarang[0:4] in listKodeBarang:
+                            continue
+                        else:
+                            gotoSettings = pypi.inputYesNo(prompt="Kode barang yang anda masukan belum terdaftar di sistem kami\nApakah anda tetap ingin menambah barang? (YES/NO) : ")
+                            if gotoSettings == "Y":
+                                settings()
+                            else:
+                                add()
+                        break
                     print(f"Nama Barang  : {addBarang}")
                     stockAdd   = input("Stock Barang : ")
                     yakin = input("Apakah anda yakin menambah data diatas? (Y/T) : ").upper()
@@ -248,6 +258,10 @@ def delete():
         else:
             print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
 
+# Fungsi menjalankan menu nomor 5 Settings
+def settings():
+    print("Under Maintenance")
+
 # Fungsi menampilkan menu utama
 def main():
     while True:
@@ -261,12 +275,13 @@ def main():
         2. Menambah Barang Baru Gudang
         3. Transaksi Stock Gudang
         4. Menghapus Barang Lama Gudang
-        5. Exit
+        5. Settings
+        6. Exit
     """
     )
         menuNumber = pypi.inputInt(
             prompt="Masukan Nomor Pilihan (1-5): ",
-            lessThan=6)
+            lessThan=7)
         if menuNumber == 1:
             report()
         elif menuNumber == 2:
@@ -276,6 +291,8 @@ def main():
         elif menuNumber == 4:
             delete()
         elif menuNumber == 5:
+            settings()
+        elif menuNumber == 6:
             print("\n~~~~Terimakasih~~~~\nProgram made by : fathurizkym")
             sys.exit()
         else:
@@ -290,11 +307,18 @@ if __name__ == "__main__":
         "item-2" : [2, "FRM-2", "Barang C", 15, 0, 0, 15, dt.date(2023,1,3).strftime("%d-%m-%Y")],
     }
 
-    petugasGudang = ["Fathur Rizky Maulana", 
+    petugasGudang = [
+        "Fathur Rizky Maulana", 
         "Fitra Fauzan", 
         "Andi Nurmansyah", 
         "Harits Ramadhan", 
         "Rona Mardiana",
+    ]
+
+    listKodeBarang = [
+        "FRM-",
+        "RMF-",
+        "MFR-",
     ]
 
     printFormat = '{:<2}' + '{:<10}' * (len(dictStockGdg["column"]))
