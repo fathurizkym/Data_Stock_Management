@@ -13,7 +13,7 @@ def heading(nama):
 
 # Fungsi menampilkan update stock gudang 
 def show(Dict, printFormat):
-    heading()
+    heading(inputPtgs)
     print("\nUpdate Laporan Stock Barang PT. XYZ\n")
     for value in Dict.values():
         print(printFormat.format("", *value))
@@ -38,8 +38,6 @@ def report():
             showDataUnique()
         elif menuReportGdg == 3:
             main()
-        else:
-            print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
             continue
 
 # Fungsi menjalankan menu nomor 1.2 menampilkan data tertentu di gudang
@@ -81,50 +79,45 @@ def add():
                     while True:
                         kodeBarang = input("Kode Barang  : ").upper()
                         if kodeBarang[0:4] in listKodeBarang:
-                            continue
+                            print(f"Nama Barang  : {addBarang}")
+                            stockAdd = pypi.inputNum(prompt="Stock Barang : ")
+                            yakin = pypi.inputYesNo(prompt="Apakah anda yakin menambah data diatas? (YES/NO) : ")
+                            if yakin == "yes":
+                                stockIn  = 0
+                                stockOut = 0
+                                index = len(dictStockGdg) - 1
+                                dictStockGdg.update({
+                                    f"item-{index}" : [
+                                        index,
+                                        kodeBarang,
+                                        addBarang,
+                                        stockAdd,
+                                        stockIn,
+                                        stockOut,
+                                        stockAdd,
+                                        dt.date.today().strftime("%d-%m-%Y")
+                                    ]
+                                })
+                                add()
+                            elif yakin == "no":
+                                add()
                         else:
                             gotoSettings = pypi.inputYesNo(prompt="Kode barang yang anda masukan belum terdaftar di sistem kami\nApakah anda tetap ingin menambah barang? (YES/NO) : ")
-                            if gotoSettings == "Y":
+                            if gotoSettings == "yes":
                                 settings()
-                            else:
+                            elif gotoSettings == 'no':
                                 add()
                         break
-                    print(f"Nama Barang  : {addBarang}")
-                    stockAdd   = input("Stock Barang : ")
-                    yakin = input("Apakah anda yakin menambah data diatas? (Y/T) : ").upper()
-                    if yakin == "Y":
-                        stockIn  = 0
-                        stockOut = 0
-                        index = len(dictStockGdg) - 1
-                        dictStockGdg.update({
-                            f"item-{index}" : [
-                                index,
-                                kodeBarang,
-                                addBarang,
-                                stockAdd,
-                                stockIn,
-                                stockOut,
-                                stockAdd,
-                                dt.date.today().strftime("%d-%m-%Y")
-                            ]
-                        })
-                        add()
-                    elif yakin == "T":
-                        add()
-                    else :
-                        print("Input yang anda masukan salah!!! Input (Y/T) ")
         elif menuAdd == 2 :
             show(dictStockGdg, printFormat)        
         elif menuAdd == 3 :
             main()
-        else:
-            print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
             
 # Fungsi menjalankan menu nomor 3 Transaksi stock gudang
 def transaction():
     heading(inputPtgs)
     while True:
-        menuTransaksi = int(input("""
+        menuTransaksi = pypi.inputInt("""
 ----------Menu Transaksi Barang Stock Gudang----------
         
     Pilihan menu transaksi barang stock gudang : 
@@ -133,17 +126,17 @@ def transaction():
     3. Menampilkan semua data stock di gudang
     4. Kembali ke menu utama
     
-    Masukan Nomor Pilihan (1-4) : """))
+    Masukan Nomor Pilihan (1-4) : """, lessThan=5)
         
         if menuTransaksi == 1:
-            barangTransaksiIn = input("\nMasukan nama barang yang ingin di ditambah stocknya : ").title()
+            barangTransaksiIn = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di ditambah stocknya : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.values()):
                 if barangTransaksiIn in value:
                     print("----- Info Barang Yang Akan ditambah Stocknya -----")
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}""")
-                    yakinTransaksi = input("Apakah anda yakin ingin melakukan transaksi barang diatas? (Y/T) : ").upper()
-                    if yakinTransaksi == "Y":
-                        transaksiIn = int(input("Jumlah barang IN : "))
+                    yakinTransaksi = pypi.inputYesNo(prompt="Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
+                    if yakinTransaksi == "yes":
+                        transaksiIn = pypi.inputNum(prompt="Jumlah barang IN : ")
                         dictStockGdg.update({
                             f"item-{value[0]}" : [
                                 value[0],
@@ -156,23 +149,21 @@ def transaction():
                                 dt.date.today().strftime("%d-%m-%Y")
                             ]
                         })
-                    elif yakinTransaksi == "T":
+                    elif yakinTransaksi == "no":
                         transaction()
-                    else:
-                        print("***Input menu yang dipilih tidak sesuai***\n***Masukan pilihan (Y/T)!***")
                         break
                 elif i == len(dictStockGdg) - 1:
                     print(f"***Barang tidak dapat ditemukan***")
 
         elif menuTransaksi == 2:
-            barangTransaksiOut = input("\nMasukan nama barang yang ingin di dikurangi stocknya : ").title()
+            barangTransaksiOut = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di dikurangi stocknya : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.values()):
                 if barangTransaksiOut in value:
                     print("----- Info Barang Yang akan dikurangi Stocknya -----")
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}""")
-                    yakinTransaksi = input("Apakah anda yakin ingin melakukan transaksi barang diatas? (Y/T) : ").upper()
-                    if yakinTransaksi == "Y":
-                        transaksiOut = int(input("Jumlah barang out : "))
+                    yakinTransaksi = pypi.inputYesNo("Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
+                    if yakinTransaksi == "yes":
+                        transaksiOut = pypi.inputNum(prompt="Jumlah barang OUT : ")
                         dictStockGdg.update({
                             f"item-{value[0]}" : [
                                 value[0],
@@ -185,10 +176,8 @@ def transaction():
                                 dt.date.today().strftime("%d-%m-%Y")
                             ]
                         })
-                    elif yakinTransaksi == "T":
+                    elif yakinTransaksi == "no":
                         transaction()
-                    else:
-                        print("***Input menu yang dipilih tidak sesuai***\n***Masukan pilihan (Y/T)!***")
                         break
                 elif i == len(dictStockGdg) - 1:
                     print(f"***Barang tidak dapat ditemukan***")
@@ -199,14 +188,11 @@ def transaction():
         elif menuTransaksi == 4:
             main()
 
-        else:
-            print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
-
 # Fungsi menjalankan menu nomor 4 Menghapus barang lama gudang
 def delete():
     print("\n*** Menu ini akan satu data secara keseluruhan ***")
     while True:
-        menuAdd = int(input("""
+        menuAdd = pypi.inputInt("""
 ----------Menu Menambahkan Stock Gudang----------
         
     Pilihan menu menambahkan stock gudang : 
@@ -214,17 +200,17 @@ def delete():
     2. Menampilkan semua data stock di gudang
     3. Kembali ke menu utama
     
-    Masukan Nomor Pilihan (1-3) : """))
+    Masukan Nomor Pilihan (1-3) : """, lessThan=4)
         
         if menuAdd == 1:
-            show(dictStockGdg)
-            noDelete = int(input("\nMasukan nomor barang yang ingin dihapus satu baris : "))
+            show(dictStockGdg, printFormat)
+            noDelete = pypi.inputNum("\nMasukan nomor barang yang ingin dihapus satu baris : ")
             for i, value in enumerate(dictStockGdg.values()):
                 if noDelete in value:
                     print("----- Info Barang Yang Akan dihapus -----")
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}""")
-                    yakinDelete = input("Apakah anda yakin akan menghapus data diatas? (Y/T) : ").upper()
-                    if yakinDelete == "Y":
+                    yakinDelete = pypi.inputYesNo(prompt="Apakah anda yakin akan menghapus data diatas? (YES/NO) : ")
+                    if yakinDelete == "yes":
                         del dictStockGdg[f"item-{noDelete}"]
                         for key, value in dictStockGdg.copy().items():
                             if key != "column" and value[0] > noDelete:
@@ -242,14 +228,11 @@ def delete():
                                     ]
                                 })
                         delete()
-                    elif yakinDelete == "T":
-                        delete()
-                    else :
-                        print("Input yang anda masukan salah!!! Input (Y/T) ")
+                    elif yakinDelete == "no":
                         delete()
                     break
                 elif i == len(dictStockGdg) - 1:
-                    print(f"***{noDelete} tidak dapat ditemukan***")
+                    print(f"***Index ({noDelete}) tidak dapat ditemukan***")
                     delete()
         elif menuAdd == 2 :
             show(dictStockGdg, printFormat)        
@@ -280,7 +263,7 @@ def main():
     """
     )
         menuNumber = pypi.inputInt(
-            prompt="Masukan Nomor Pilihan (1-5): ",
+            prompt="Masukan Nomor Pilihan (1-6): ",
             lessThan=7)
         if menuNumber == 1:
             report()
