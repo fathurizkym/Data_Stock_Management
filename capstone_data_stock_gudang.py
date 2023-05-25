@@ -243,7 +243,151 @@ def delete():
 
 # Fungsi menjalankan menu nomor 5 Settings
 def settings():
-    print("Under Maintenance")
+    while True:
+        menuSettings = pypi.inputInt("""
+----------Menu Settings Stock Gudang----------
+        
+    Pilihan menu settings stock gudang : 
+    1. Setting Petugas Gudang
+    2. Setting Basis Kode Barang
+    3. Kembali ke menu utama
+    
+    Masukan Nomor Pilihan (1-3) : """, lessThan=4)
+        
+        if menuSettings == 1:
+            settingPetugasGudang()
+        elif menuSettings == 2:
+            settingBasisKodeBarang()
+        elif menuSettings == 3:
+            main()
+
+# Fungsi menjalankan Setting Petugas Gudang
+def settingPetugasGudang():
+    while True:
+        settingPetugas = pypi.inputInt("""
+----------Menu Settings Stock Gudang----------
+        
+    Pilihan menu settings stock gudang : 
+    1. Menampilkan Petugas Gudang
+    2. Mengedit Nama Petugas Gudang
+    3. Menambah Petugas Gudang Baru
+    4. Menghapus Petugas Gudang Lama
+    5. Kembali Ke Menu Settings
+    
+    Masukan Nomor Pilihan (1-5) : """, lessThan=6)
+        
+        # Pilihan Menampilkan Petugas Gudang
+        if settingPetugas == 1:
+            print("\nNama Petugas Gudang Terdaftar : ")
+            for i in range(len(petugasGudang)):
+                print(f"Petugas-{i+1} : {petugasGudang[i]}")
+            settingPetugasGudang()
+
+        # Pilihan Mengedit Nama Petugas Gudang
+        elif settingPetugas == 2:
+            noEditPetugas = pypi.inputInt(prompt="No petugas yang ingin diedit : ", lessThan=len(petugasGudang)+1)
+            namaPetugasEdit = pypi.inputStr(prompt="Masukan nama petugas baru : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            yakinEditPetugas = pypi.inputYesNo(prompt=f"Apakah anda yakin merubah {petugasGudang[noEditPetugas-1]} menjadi {namaPetugasEdit} ? (YES/NO) : ")
+            if yakinEditPetugas == "yes":
+                petugasGudang[noEditPetugas-1] = namaPetugasEdit
+                settingPetugasGudang()
+            elif yakinEditPetugas == "no":
+                settingPetugasGudang()
+
+        # Pilihan Menambah Petugas Baru
+        elif settingPetugas == 3:
+            nambahPetugas = pypi.inputStr(prompt="Masukan nama petugas gudang baru : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            if nambahPetugas in petugasGudang:
+                print(f"*** Nama petugas {nambahPetugas} sudah ada dalam database ***")
+                settingPetugasGudang()
+            elif nambahPetugas not in petugasGudang:
+                yakinTambahPetugas = pypi.inputYesNo(prompt=f"Apakah anda yakin menambah {nambahPetugas} kedalam database gudang ? (YES/NO) : ")
+                if yakinTambahPetugas == "yes":
+                    petugasGudang.append(nambahPetugas)
+                    settingPetugasGudang()
+                elif yakinTambahPetugas == "no":
+                    settingPetugasGudang()
+
+        # Pilihan Menghapus Petugas Gudang Lama
+        elif settingPetugas == 4:
+            hapusPetugas = pypi.inputStr(prompt="Masukan nama petugas yang ingin dihapus : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            if hapusPetugas in petugasGudang:
+                yakinHapusPetugas = pypi.inputYesNo(prompt=f"Apakah anda yakin menghapus {hapusPetugas} dari database gudang ? (YES/NO) : ")
+                if yakinHapusPetugas == "yes":
+                    petugasGudang.remove(hapusPetugas)
+                    settingPetugasGudang()
+                elif yakinHapusPetugas == "no":
+                    settingPetugasGudang()
+            elif hapusPetugas not in petugasGudang:
+                print(f"*** Nama petugas {hapusPetugas} tidak ada dalam database ***")
+
+        # Pilihan Kembali Ke Menu Settings
+        elif settingPetugas == 5:
+            settings()
+    
+# Fungsi menjalankan Setting Basis Kode Barang
+def settingBasisKodeBarang():
+    while True:
+        settingKode = pypi.inputInt("""
+----------Menu Settings Basis Kode Barang----------
+        
+    Pilihan menu settings Basis kode barang : 
+    1. Menampilkan List Basis Kode Barang
+    2. Mengedit Basis Kode Barang
+    3. Menambah Basis Kode Barang
+    4. Menghapus Basis Kode Barang Lama
+    5. Kembali Ke Menu Settings
+    
+    Masukan Nomor Pilihan (1-5) : """, lessThan=6)
+        
+        # Pilihan Menampilkan Petugas Gudang
+        if settingKode == 1:
+            print("\nNama Basis Kode Barang Terdaftar : ")
+            for i in range(len(listKodeBarang)):
+                print(f"KodeBarang-{i+1} : {listKodeBarang[i]}")
+            settingBasisKodeBarang()
+
+        # Pilihan Mengedit Nama Petugas Gudang
+        elif settingKode == 2:
+            noEditBasisKode = pypi.inputInt(prompt="No basis kode yang ingin diedit : ", lessThan=len(listKodeBarang)+1)
+            namaBasisKodeEdit = pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
+            yakinEditBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin merubah basis kode {listKodeBarang[noEditBasisKode-1]} menjadi {namaBasisKodeEdit} ? (YES/NO) : ")
+            if yakinEditBasisKode == "yes":
+                listKodeBarang[noEditBasisKode-1] = namaBasisKodeEdit
+                settingBasisKodeBarang()
+            elif yakinEditBasisKode == "no":
+                settingBasisKodeBarang()
+
+        # Pilihan Menambah Petugas Baru
+        elif settingKode == 3:
+            nambahBasisKode= pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
+            if nambahBasisKode in listKodeBarang:
+                print(f"*** Basis Kode {nambahBasisKode} sudah ada dalam database ***")
+                settingBasisKodeBarang()
+            elif nambahBasisKode not in listKodeBarang:
+                yakinTambahBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin menambah {nambahBasisKode} kedalam database gudang ? (YES/NO) : ")
+                if yakinTambahBasisKode == "yes":
+                    listKodeBarang.append(nambahBasisKode)
+                    settingBasisKodeBarang()
+                elif yakinTambahBasisKode == "no":
+                    settingBasisKodeBarang()
+
+        # Pilihan Menghapus Petugas Gudang Lama
+        elif settingKode == 4:
+            hapusBasisKode = pypi.inputStr(prompt="Masukan nama basis kode yang ingin dihapus : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
+            if hapusBasisKode in listKodeBarang:
+                yakinHapusBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin menghapus {hapusBasisKode} dari database gudang ? (YES/NO) : ")
+                if yakinHapusBasisKode == "yes":
+                    listKodeBarang.remove(hapusBasisKode)
+                    settingBasisKodeBarang()
+                elif yakinHapusBasisKode == "no":
+                    settingBasisKodeBarang()
+            elif hapusBasisKode not in listKodeBarang:
+                print(f"*** Nama basis kode {hapusBasisKode} tidak ada dalam database ***")
+
+        # Pilihan Kembali Ke Menu Settings
+        elif settingKode == 5:
+            settings()
 
 # Fungsi menampilkan menu utama
 def main():
