@@ -11,16 +11,18 @@ def heading(nama):
     print("=" * 50)
     print(f"\nTanggal : {dt.date.today()} \nPetugas Gudang : {nama}")
 
+# Fungsi meratakan kolom tabel
+def printFormat(print, x, y, Dict):
+    print = '{:<x}' + '{:<y}' * (len(Dict["column"]))
+
 # Fungsi menampilkan update stock gudang 
 def show(Dict, printFormat):
-    heading(inputPtgs)
     print("\nUpdate Laporan Stock Barang PT. XYZ\n")
     for value in Dict.values():
         print(printFormat.format("", *value))
 
 # Fungsi menjalankan menu nomor 1 Report Stock Gudang (Read)
 def report():
-    heading(inputPtgs)
     while True:
         print("""
 ----------Menu Report Stock Gudang----------
@@ -54,7 +56,6 @@ def showDataUnique():
         
 # Fungsi menjalankan menu nomor 2 Menambah barang baru di gudang
 def add():
-    heading(inputPtgs)
     while True:
         menuAdd = pypi.inputInt(prompt="""
 ----------Menu Menambahkan Stock Gudang----------
@@ -115,7 +116,6 @@ def add():
             
 # Fungsi menjalankan menu nomor 3 Transaksi stock gudang
 def transaction():
-    heading(inputPtgs)
     while True:
         menuTransaksi = pypi.inputInt("""
 ----------Menu Transaksi Barang Stock Gudang----------
@@ -425,6 +425,30 @@ def main():
         else:
             print("Nomor menu yang dipilih tidak sesuai.\nMasukan nomor sesuai yang tertera diatas")
 
+# Fungsi Start Program
+def start():
+    startProgram = pypi.inputYesNo(prompt="Jalankan program? (YES/NO) : ")
+    if startProgram == "yes":
+        if len(dictStockGdg) == 0:
+            print("Tidak ada data untuk diproses")
+        else:
+            while True:
+                inputPtgs = pypi.inputStr(
+                    prompt="\nMasukan Nama Petugas Jaga : ",
+                    applyFunc=lambda x: x.title(),
+                    blockRegexes="0123456789")
+                if inputPtgs in petugasGudang:
+                    print(f"\nLogin sukses\nNama petugas gudang : {inputPtgs}")
+                    heading(inputPtgs)
+                    main()
+                    break
+                else:
+                    print(f"Nama anda ({inputPtgs}) tidak ada dalam database petugas gudang kami")
+                    print(f"Silahkan minta izin ke petugas gudang kami : \n{petugasGudang}")
+    elif startProgram == "no":
+        sys.exit()
+
+
 if __name__ == "__main__":
     # Dictionary stock Gudang
     dictStockGdg = {
@@ -448,18 +472,6 @@ if __name__ == "__main__":
         "MFR-",
     ]
 
-    printFormat = '{:<2}' + '{:<10}' * (len(dictStockGdg["column"]))
+    printFormat = '{:<1}' + '{:<15}' * (len(dictStockGdg["column"]))
 
-    while True:
-        inputPtgs = pypi.inputStr(
-            prompt="\nMasukan Nama Petugas Jaga : ",
-            applyFunc=lambda x: x.title(),
-            blockRegexes="0123456789")
-       
-        if inputPtgs in petugasGudang:
-            print(f"\nLogin sukses\nNama petugas gudang : {inputPtgs}")
-            main()
-            break
-        else:
-            print(f"Nama anda ({inputPtgs}) tidak ada dalam database petugas gudang kami")
-            print(f"Silahkan minta izin ke petugas gudang kami : \n{petugasGudang}")
+    start()

@@ -1,0 +1,5 @@
+Index;Kode_Barang;Nama_Barang;Stock_Awal;Stock_In;Stock_Out;Stock_Akhir;date
+0;SLD-1;Kayu;10;0;0;10;2023,1,1
+1;SLD-2;Besi;5;0;0;5;2023,1,4
+2;LQD-8;Air;10;0;0;10;2023,1,19
+3;GAS-3;Hidrogen;25;0;0;25;2023,2,5
