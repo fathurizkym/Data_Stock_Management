@@ -105,7 +105,7 @@ def add():
                         else:
                             gotoSettings = pypi.inputYesNo(prompt="Kode barang yang anda masukan belum terdaftar di sistem kami\nApakah anda tetap ingin menambah barang? (YES/NO) : ")
                             if gotoSettings == "yes":
-                                settings()
+                                settingBasisKodeBarang()
                             elif gotoSettings == 'no':
                                 add()
                         break
