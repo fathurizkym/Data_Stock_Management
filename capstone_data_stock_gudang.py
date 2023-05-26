@@ -11,10 +11,6 @@ def heading(nama):
     print("=" * 50)
     print(f"\nTanggal : {dt.date.today()} \nPetugas Gudang : {nama}")
 
-# Fungsi meratakan kolom tabel
-def printFormat(print, x, y, Dict):
-    print = '{:<x}' + '{:<y}' * (len(Dict["column"]))
-
 # Fungsi menampilkan update stock gudang 
 def show(Dict, printFormat):
     print("\nUpdate Laporan Stock Barang PT. XYZ\n")
