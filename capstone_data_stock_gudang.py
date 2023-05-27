@@ -38,7 +38,7 @@ def report():
             main()
             continue
 
-# Fungsi menjalankan menu nomor 1.2 menampilkan data tertentu di gudang
+# Fungsi menjalankan menu nomor 1.2 Menampilkan Data Tertentu Di Gudang
 def showDataUnique():
     inputNamaBarang = pypi.inputStr(prompt="Masukan Nama Barang Yang Dicari : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
     for i, value in enumerate(dictStockGdg.values()):
@@ -50,7 +50,7 @@ def showDataUnique():
             print(f"***Barang {inputNamaBarang} tidak dapat ditemukan***")
             report()
         
-# Fungsi menjalankan menu nomor 2 Menambah barang baru di gudang
+# Fungsi menjalankan menu nomor 2 Menambah Barang Baru Di Gudang
 def add():
     while True:
         menuAdd = pypi.inputInt(prompt="""
@@ -63,6 +63,7 @@ def add():
     
     Masukan Nomor Pilihan (1-3) : """, lessThan=4)
         
+        # Pilihan Menjalankan Menu Tambah barang baru di data stock gudang
         if menuAdd == 1:
             addBarang = pypi.inputStr(prompt="Masukan nama barang yang ingin ditambahkan : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.copy().values()):
@@ -115,13 +116,17 @@ def add():
                                     elif gotoSettings == 'no':
                                         add()
                         break
+
+        # Pilihan Menjalankan Menu Menampilkan semua data stock gudang
         elif menuAdd == 2 :
-            show(dictStockGdg, printFormat)        
+            show(dictStockGdg, printFormat)   
+
+        # Pilihan Menjalankan Menu Kembali ke menu utama
         elif menuAdd == 3 :
             main()
             
-# Fungsi menjalankan menu nomor 3 Transaksi stock gudang
-def transaction():
+# Fungsi menjalankan menu nomor 3 Transaksi Stock Gudang
+def transaksi():
     while True:
         menuTransaksi = pypi.inputInt("""
 ----------Menu Transaksi Barang Stock Gudang----------
@@ -134,12 +139,13 @@ def transaction():
     
     Masukan Nomor Pilihan (1-4) : """, lessThan=5)
         
+        # Pilihan Menjalankan Menu Menambah jumlah barang di gudang
         if menuTransaksi == 1:
             barangTransaksiIn = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di ditambah stocknya : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.values()):
                 if barangTransaksiIn in value:
                     print("----- Info Barang Yang Akan ditambah Stocknya -----")
-                    print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}""")
+                    print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\Tanggal : {value[7]}""")
                     yakinTransaksi = pypi.inputYesNo(prompt="Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
                     if yakinTransaksi == "yes":
                         transaksiIn = pypi.inputNum(prompt="Jumlah barang IN : ")
@@ -155,19 +161,20 @@ def transaction():
                                 dt.date.today().strftime("%d-%m-%Y")
                             ]
                         })
-                        transaction()
+                        transaksi()
                     elif yakinTransaksi == "no":
-                        transaction()
+                        transaksi()
                         break
                 elif i == len(dictStockGdg) - 1:
                     print(f"***({barangTransaksiIn}) tidak dapat ditemukan***")
-            
+
+        # Pilihan Menjalankan Menu Mengurangi jumlah barang di gudang   
         elif menuTransaksi == 2:
             barangTransaksiOut = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di dikurangi stocknya : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.values()):
                 if barangTransaksiOut in value:
                     print("----- Info Barang Yang akan dikurangi Stocknya -----")
-                    print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}""")
+                    print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\Tanggal : {value[7]}""")
                     yakinTransaksi = pypi.inputYesNo("Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
                     if yakinTransaksi == "yes":
                         transaksiOut = pypi.inputNum(prompt="Jumlah barang OUT : ")
@@ -184,27 +191,29 @@ def transaction():
                                     dt.date.today().strftime("%d-%m-%Y")
                                 ]
                             })
-                            transaction()
+                            transaksi()
                         else:
                             print(f"***Jumlah stock barang tidak mencukupi!***\n***Total stock {barangTransaksiOut} : {value[3]+value[4]}***")
-                            transaction()
+                            transaksi()
                     elif yakinTransaksi == "no":
-                        transaction()
+                        transaksi()
                         break
                 elif i == len(dictStockGdg) - 1:
                     print(f"***({barangTransaksiOut}) tidak dapat ditemukan***")
 
+        # Pilihan Menjalankan Menu Menampilkan semua data stock di gudang
         elif menuTransaksi == 3:
             show(dictStockGdg, printFormat)
 
+        # Pilihan Menu Menjalankan Kembali ke menu utama
         elif menuTransaksi == 4:
             main()
 
-# Fungsi menjalankan menu nomor 4 Menghapus barang lama gudang
+# Fungsi menjalankan menu nomor 4 Menghapus Barang Lama Gudang
 def delete():
     print("\n*** Menu ini akan satu data secara keseluruhan ***")
     while True:
-        menuAdd = pypi.inputInt("""
+        menuDelete = pypi.inputInt("""
 ----------Menu Menambahkan Stock Gudang----------
         
     Pilihan menu menambahkan stock gudang : 
@@ -214,13 +223,14 @@ def delete():
     
     Masukan Nomor Pilihan (1-3) : """, lessThan=4)
         
-        if menuAdd == 1:
+        # Pilihan Menjalankan Menu Hapus Data Stock Gudang 
+        if menuDelete == 1:
             show(dictStockGdg, printFormat)
-            noDelete = pypi.inputNum("\nMasukan nomor barang yang ingin dihapus satu baris : ")
+            noDelete = pypi.inputNum("\nMasukan nomor barang yang ingin dihapus keseluruhan : ")
             for i, value in enumerate(dictStockGdg.values()):
                 if noDelete in value:
                     print("----- Info Barang Yang Akan dihapus -----")
-                    print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}""")
+                    print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\Tanggal : {value[7]}""")
                     yakinDelete = pypi.inputYesNo(prompt="Apakah anda yakin akan menghapus data diatas? (YES/NO) : ")
                     if yakinDelete == "yes":
                         del dictStockGdg[f"item-{noDelete}"]
@@ -246,12 +256,14 @@ def delete():
                 elif i == len(dictStockGdg) - 1:
                     print(f"***Index ({noDelete}) tidak dapat ditemukan***")
                     delete()
-        elif menuAdd == 2 :
-            show(dictStockGdg, printFormat)        
-        elif menuAdd == 3 :
+        
+        # Pilihan Menjalankan Menu Menampilkan semua data stock di gudang
+        elif menuDelete == 2 :
+            show(dictStockGdg, printFormat) 
+
+        # Pilihan Menjalankan Menu Kembali Ke Menu Utama       
+        elif menuDelete == 3 :
             main()
-        else:
-            print("***Nomor menu yang dipilih tidak sesuai***\n***Masukan nomor sesuai yang tertera diatas***")
 
 # Fungsi menjalankan menu nomor 5 Settings
 def settings():
@@ -273,7 +285,7 @@ def settings():
         elif menuSettings == 3:
             main()
 
-# Fungsi menjalankan Setting Petugas Gudang
+# Fungsi menjalankan menu nomor 5.1 Setting Petugas Gudang
 def settingPetugasGudang():
     while True:
         settingPetugas = pypi.inputInt("""
@@ -348,7 +360,7 @@ def settingPetugasGudang():
         elif settingPetugas == 6:
             main()
     
-# Fungsi menjalankan Setting Basis Kode Barang
+# Fungsi menjalankan menu nomor 5.2 Setting Basis Kode Barang
 def settingBasisKodeBarang():
     while True:
         settingKode = pypi.inputInt("""
@@ -427,7 +439,7 @@ def settingBasisKodeBarang():
         elif settingKode == 6:
             main()
 
-# Fungsi menampilkan menu utama
+# Fungsi menampilkan Menu Utama
 def main():
     while True:
         print(
@@ -437,31 +449,39 @@ def main():
 
         Pilihan Menu :
         1. Report Stock Gudang
-        2. Menambah Barang Baru Gudang
+        2. Menambah Barang Baru Di Data Stock Gudang
         3. Transaksi Stock Gudang
-        4. Menghapus Barang Lama Gudang
+        4. Menghapus Barang Lama Di Data Stock Gudang
         5. Settings
         6. Exit
     """
     )
-        menuNumber = pypi.inputInt(
-            prompt="Masukan Nomor Pilihan (1-6): ",
-            lessThan=7)
+        menuNumber = pypi.inputInt(prompt="Masukan Nomor Pilihan (1-6): ",lessThan=7)
+
+        # Pilihan Menjalankan menu Report Stock Gudang
         if menuNumber == 1:
             report()
+        
+        # Pilihan Menjalankan menu Menambah Barang Baru Di Data Stock Gudang
         elif menuNumber == 2:
             add()
+        
+        # Pilihan Menjalankan menu Transaksi Stock Gudang
         elif menuNumber == 3:
             transaction()
+        
+        # Pilihan Menjalankan menu Menghapus Barang Lama Di Data Stock Gudang
         elif menuNumber == 4:
             delete()
+        
+        # Pilihan Mennjalankan Menu Settings
         elif menuNumber == 5:
             settings()
+        
+        # Pilihan Exit Dari Program
         elif menuNumber == 6:
             print("\n~~~~Terimakasih~~~~\nProgram made by : fathurizkym")
             sys.exit()
-        else:
-            print("Nomor menu yang dipilih tidak sesuai.\nMasukan nomor sesuai yang tertera diatas")
 
 # Fungsi Start Program
 def start():
@@ -486,11 +506,10 @@ def start():
     elif startProgram == "no":
         sys.exit()
 
-
 if __name__ == "__main__":
     # Dictionary stock Gudang
     dictStockGdg = {
-        "column" : ["Index", "Kode Barang", "Nama Barang", "Stock Awal", "Stock In", "Stock Out", "Stock Akhir", "Date"],
+        "column" : ["Index", "Kode Barang", "Nama Barang", "Stock Awal", "Stock In", "Stock Out", "Stock Akhir", "Tanggal"],
         "item-0" : [0, "FRM-0", "Barang A", 10, 0, 0, 10, dt.date(2023,1,1).strftime("%d-%m-%Y")],
         "item-1" : [1, "FRM-1", "Barang B", 20, 0, 0, 20, dt.date(2023,1,2).strftime("%d-%m-%Y")],
         "item-2" : [2, "FRM-2", "Barang C", 15, 0, 0, 15, dt.date(2023,1,3).strftime("%d-%m-%Y")],
