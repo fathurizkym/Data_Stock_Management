@@ -54,17 +54,16 @@ def showDataUnique():
 def add():
     while True:
         menuAdd = pypi.inputInt(prompt="""
-----------Menu Menambahkan Stock Gudang----------
+----------Menu Menambah Barang Baru Di Data Stock Gudang----------
         
-    Pilihan menu menambahkan stock gudang : 
-    1. Tambah data stock di gudang
-    2. Menampilkan semua data stock di gudang
+    Pilihan menu menambah barang baru di data stock gudang : 
+    1. Tambah barang baru di data stock gudang
+    2. Menampilkan semua data stock gudang
     3. Kembali ke menu utama
     
     Masukan Nomor Pilihan (1-3) : """, lessThan=4)
         
         if menuAdd == 1:
-            # show(dictStockGdg)
             addBarang = pypi.inputStr(prompt="Masukan nama barang yang ingin ditambahkan : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.copy().values()):
                 if addBarang in value:
@@ -72,38 +71,49 @@ def add():
                     add()
                     break
                 elif i == len(dictStockGdg) - 1:
-                    print("Silahkan input barang yang ingin dimasukan")
+                    print("=--- Silahkan input barang yang ingin dimasukan ---=")
                     while True:
+                        print(f" -Basis kode barang yang tersedia : {listKodeBarang}")
+                        print(f" -Format penulisan kode : BasisKode[UniqueNumber]")
                         kodeBarang = input("Kode Barang  : ").upper()
-                        if kodeBarang[0:4] in listKodeBarang:
-                            print(f"Nama Barang  : {addBarang}")
-                            stockAdd = pypi.inputNum(prompt="Stock Barang : ")
-                            yakin = pypi.inputYesNo(prompt="Apakah anda yakin menambah data diatas? (YES/NO) : ")
-                            if yakin == "yes":
-                                stockIn  = 0
-                                stockOut = 0
-                                index = len(dictStockGdg) - 1
-                                dictStockGdg.update({
-                                    f"item-{index}" : [
-                                        index,
-                                        kodeBarang,
-                                        addBarang,
-                                        stockAdd,
-                                        stockIn,
-                                        stockOut,
-                                        stockAdd,
-                                        dt.date.today().strftime("%d-%m-%Y")
-                                    ]
-                                })
+                        for i, value in enumerate(dictStockGdg.values()):
+                            if kodeBarang in value:
+                                print("*** Kode barang sudah ada dalam database gudang kami ***")
                                 add()
-                            elif yakin == "no":
-                                add()
-                        else:
-                            gotoSettings = pypi.inputYesNo(prompt="Kode barang yang anda masukan belum terdaftar di sistem kami\nApakah anda tetap ingin menambah barang? (YES/NO) : ")
-                            if gotoSettings == "yes":
-                                settingBasisKodeBarang()
-                            elif gotoSettings == 'no':
-                                add()
+                                break
+                            elif i == len(dictStockGdg)-1:
+                                if kodeBarang[0:4] in listKodeBarang and (kodeBarang[4]) in ["0","1","2","3","4","5","6","7","8","9"]:
+                                    if kodeBarang[0:4] in listKodeBarang:
+                                        print(f"Nama Barang  : {addBarang}")
+                                        stockAdd = pypi.inputNum(prompt="Stock Barang : ")
+                                        yakin = pypi.inputYesNo(prompt="Apakah anda yakin menambah data diatas? (YES/NO) : ")
+                                        if yakin == "yes":
+                                            stockIn  = 0
+                                            stockOut = 0
+                                            index = len(dictStockGdg) - 1
+                                            dictStockGdg.update({
+                                                f"item-{index}" : [
+                                                    index,
+                                                    kodeBarang,
+                                                    addBarang,
+                                                    stockAdd,
+                                                    stockIn,
+                                                    stockOut,
+                                                    stockAdd,
+                                                    dt.date.today().strftime("%d-%m-%Y")
+                                                ]
+                                            })
+                                            add()
+                                        elif yakin == "no":
+                                            add()
+                                else:
+                                    print(f"  *** Kode barang ({kodeBarang[0:4]}) belum terdaftar di sistem kami ***\n  *** Basis kode yang tersedia : {listKodeBarang} ***")
+                                    print(f"## Apakah anda tetap ingin menambah barang dengan kode tersebut?")
+                                    gotoSettings = pypi.inputYesNo(prompt=f"""## Jika iya, maka anda akan diarahkan menuju menu "Settings Basis Kode Barang" (YES/NO) : """)
+                                    if gotoSettings == "yes":
+                                        settingBasisKodeBarang()
+                                    elif gotoSettings == 'no':
+                                        add()
                         break
         elif menuAdd == 2 :
             show(dictStockGdg, printFormat)        
@@ -145,12 +155,13 @@ def transaction():
                                 dt.date.today().strftime("%d-%m-%Y")
                             ]
                         })
+                        transaction()
                     elif yakinTransaksi == "no":
                         transaction()
                         break
                 elif i == len(dictStockGdg) - 1:
-                    print(f"***Barang tidak dapat ditemukan***")
-
+                    print(f"***({barangTransaksiIn}) tidak dapat ditemukan***")
+            
         elif menuTransaksi == 2:
             barangTransaksiOut = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di dikurangi stocknya : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             for i, value in enumerate(dictStockGdg.values()):
@@ -160,23 +171,28 @@ def transaction():
                     yakinTransaksi = pypi.inputYesNo("Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
                     if yakinTransaksi == "yes":
                         transaksiOut = pypi.inputNum(prompt="Jumlah barang OUT : ")
-                        dictStockGdg.update({
-                            f"item-{value[0]}" : [
-                                value[0],
-                                value[1],
-                                value[2],
-                                value[3],
-                                value[4],
-                                transaksiOut,
-                                value[3] + value[4] - transaksiOut,
-                                dt.date.today().strftime("%d-%m-%Y")
-                            ]
-                        })
+                        if transaksiOut <= value[3] + value[4] :
+                            dictStockGdg.update({
+                                f"item-{value[0]}" : [
+                                    value[0],
+                                    value[1],
+                                    value[2],
+                                    value[3],
+                                    value[4],
+                                    transaksiOut,
+                                    value[3] + value[4] - transaksiOut,
+                                    dt.date.today().strftime("%d-%m-%Y")
+                                ]
+                            })
+                            transaction()
+                        else:
+                            print(f"***Jumlah stock barang tidak mencukupi!***\n***Total stock {barangTransaksiOut} : {value[3]+value[4]}***")
+                            transaction()
                     elif yakinTransaksi == "no":
                         transaction()
                         break
                 elif i == len(dictStockGdg) - 1:
-                    print(f"***Barang tidak dapat ditemukan***")
+                    print(f"***({barangTransaksiOut}) tidak dapat ditemukan***")
 
         elif menuTransaksi == 3:
             show(dictStockGdg, printFormat)
@@ -269,8 +285,9 @@ def settingPetugasGudang():
     3. Menambah Petugas Gudang Baru
     4. Menghapus Petugas Gudang Lama
     5. Kembali Ke Menu Settings
+    6. Kembali Ke Menu Utama
     
-    Masukan Nomor Pilihan (1-5) : """, lessThan=6)
+    Masukan Nomor Pilihan (1-6) : """, lessThan=7)
         
         # Pilihan Menampilkan Petugas Gudang
         if settingPetugas == 1:
@@ -281,6 +298,9 @@ def settingPetugasGudang():
 
         # Pilihan Mengedit Nama Petugas Gudang
         elif settingPetugas == 2:
+            print("\nNama Petugas Gudang Terdaftar : ")
+            for i in range(len(petugasGudang)):
+                print(f"Petugas-{i+1} : {petugasGudang[i]}")
             noEditPetugas = pypi.inputInt(prompt="No petugas yang ingin diedit : ", lessThan=len(petugasGudang)+1)
             namaPetugasEdit = pypi.inputStr(prompt="Masukan nama petugas baru : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             yakinEditPetugas = pypi.inputYesNo(prompt=f"Apakah anda yakin merubah {petugasGudang[noEditPetugas-1]} menjadi {namaPetugasEdit} ? (YES/NO) : ")
@@ -306,6 +326,9 @@ def settingPetugasGudang():
 
         # Pilihan Menghapus Petugas Gudang Lama
         elif settingPetugas == 4:
+            print("\nNama Petugas Gudang Terdaftar : ")
+            for i in range(len(petugasGudang)):
+                print(f"Petugas-{i+1} : {petugasGudang[i]}")
             hapusPetugas = pypi.inputStr(prompt="Masukan nama petugas yang ingin dihapus : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
             if hapusPetugas in petugasGudang:
                 yakinHapusPetugas = pypi.inputYesNo(prompt=f"Apakah anda yakin menghapus {hapusPetugas} dari database gudang ? (YES/NO) : ")
@@ -320,6 +343,10 @@ def settingPetugasGudang():
         # Pilihan Kembali Ke Menu Settings
         elif settingPetugas == 5:
             settings()
+        
+        # Pilihan Untuk Langsung Kembali Ke Menu Utama
+        elif settingPetugas == 6:
+            main()
     
 # Fungsi menjalankan Setting Basis Kode Barang
 def settingBasisKodeBarang():
@@ -333,18 +360,22 @@ def settingBasisKodeBarang():
     3. Menambah Basis Kode Barang
     4. Menghapus Basis Kode Barang Lama
     5. Kembali Ke Menu Settings
+    6. Kembali Ke Menu Utama
     
-    Masukan Nomor Pilihan (1-5) : """, lessThan=6)
+    Masukan Nomor Pilihan (1-6) : """, lessThan=7)
         
-        # Pilihan Menampilkan Petugas Gudang
+        # Pilihan Menampilkan Basis Kode Barang Tersedia
         if settingKode == 1:
             print("\nNama Basis Kode Barang Terdaftar : ")
             for i in range(len(listKodeBarang)):
                 print(f"KodeBarang-{i+1} : {listKodeBarang[i]}")
             settingBasisKodeBarang()
 
-        # Pilihan Mengedit Nama Petugas Gudang
+        # Pilihan Mengedit Basis Kode Barang Tersedia
         elif settingKode == 2:
+            print("\nNama Basis Kode Barang Terdaftar : ")
+            for i in range(len(listKodeBarang)):
+                print(f"KodeBarang-{i+1} : {listKodeBarang[i]}")
             noEditBasisKode = pypi.inputInt(prompt="No basis kode yang ingin diedit : ", lessThan=len(listKodeBarang)+1)
             namaBasisKodeEdit = pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
             yakinEditBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin merubah basis kode {listKodeBarang[noEditBasisKode-1]} menjadi {namaBasisKodeEdit} ? (YES/NO) : ")
@@ -354,11 +385,15 @@ def settingBasisKodeBarang():
             elif yakinEditBasisKode == "no":
                 settingBasisKodeBarang()
 
-        # Pilihan Menambah Petugas Baru
+        # Pilihan Menambah Basis Kode Barang Baru
         elif settingKode == 3:
+            print("## Panjang karakter basis kode baru kurang dari 5 termasuk karakter strip (-)")
             nambahBasisKode= pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
             if nambahBasisKode in listKodeBarang:
                 print(f"*** Basis Kode {nambahBasisKode} sudah ada dalam database ***")
+                settingBasisKodeBarang()
+            elif len(nambahBasisKode) > 4:
+                print("*** Jumlah karakter terlalu banyak! ***")
                 settingBasisKodeBarang()
             elif nambahBasisKode not in listKodeBarang:
                 yakinTambahBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin menambah {nambahBasisKode} kedalam database gudang ? (YES/NO) : ")
@@ -368,8 +403,11 @@ def settingBasisKodeBarang():
                 elif yakinTambahBasisKode == "no":
                     settingBasisKodeBarang()
 
-        # Pilihan Menghapus Petugas Gudang Lama
+        # Pilihan Menghapus Basis Kode Barang Lama
         elif settingKode == 4:
+            print("\nNama Basis Kode Barang Terdaftar : ")
+            for i in range(len(listKodeBarang)):
+                print(f"KodeBarang-{i+1} : {listKodeBarang[i]}")
             hapusBasisKode = pypi.inputStr(prompt="Masukan nama basis kode yang ingin dihapus : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
             if hapusBasisKode in listKodeBarang:
                 yakinHapusBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin menghapus {hapusBasisKode} dari database gudang ? (YES/NO) : ")
@@ -384,6 +422,10 @@ def settingBasisKodeBarang():
         # Pilihan Kembali Ke Menu Settings
         elif settingKode == 5:
             settings()
+
+        # Pilihan Untuk Langsung Kembali Ke Menu Utama
+        elif settingKode == 6:
+            main()
 
 # Fungsi menampilkan menu utama
 def main():
@@ -455,7 +497,7 @@ if __name__ == "__main__":
     }
 
     petugasGudang = [
-        "Fathur Rizky Maulana", 
+        "Fathur", 
         "Fitra Fauzan", 
         "Andi Nurmansyah", 
         "Harits Ramadhan", 
