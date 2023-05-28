@@ -1,4 +1,1 @@
-Index;Basis_Kode;Keterangan
-0;SLD-;Barang dengan klasifikasi wujud solid
-1;LQD-;Barang dengan klasifikasi wujud liquid
-2;GAS-;Barang dengan klasifikasi wujud gas
+"SLD-,LQD-,BAB-"
