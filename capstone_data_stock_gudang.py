@@ -493,6 +493,21 @@ def main():
         elif menuNumber == 6:
             print("\n~~~~Terimakasih~~~~\nProgram made by : fathurizkym")
 
+            for key, value in dbStockGudang.copy().items():
+                if key != "column":    
+                    dbStockGudang.update({
+                        f"item-{value[0]}" : [
+                            value[0],
+                            value[1],
+                            value[2],
+                            value[6],
+                            0,
+                            0,
+                            value[6],
+                            value[7],
+                        ]
+                    })
+
             # Export Database Stock Gudang Ke File CSV
             fileStockGudang = open(pathStockGudang, "w", newline="")
             writerStockGudang = csv.writer(fileStockGudang, delimiter=";")
@@ -544,7 +559,7 @@ if __name__ == "__main__":
 
     # Import Database Basis Kode Barang Dari File CSV
     with open("D:\Purwadhika JCDS\Capstone Project\Modul 1\data_basis_kode_barang.csv", "r") as importBasisKode:
-        readerBasisKode = csv.reader(importBasisKode, delimiter=";")
+        readerBasisKode = csv.reader(importBasisKode, delimiter=",")
         for listKodeBarang in readerBasisKode:
             print(listKodeBarang)
 
@@ -563,5 +578,5 @@ if __name__ == "__main__":
             main()
             break
         else:
-            print(f"Nama anda ({inputPtgs}) tidak ada dalam database petugas gudang kami")
-            print(f"Silahkan minta izin ke petugas gudang kami : \n{listPetugasGudang}")
+            print(f"*** Nama anda ({inputPtgs}) tidak ada dalam database petugas gudang kami ***")
+            print(f"*** Silahkan minta izin ke pengawas gudang kami ***")
