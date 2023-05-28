@@ -11,11 +11,16 @@ def heading(nama):
     print("=" * 50)
     print(f"\nTanggal : {dt.date.today()} \nPetugas Gudang : {nama}")
 
+
 # Fungsi menampilkan update stock gudang 
 def show(Dict, printFormat):
-    print("\nUpdate Laporan Stock Barang PT. XYZ\n")
-    for value in Dict.values():
-        print(printFormat.format("", *value))
+    if len(dictStockGdg) <= 1 or "column" not in dictStockGdg.keys():
+        print("*** Data Stock Gudang Kosong/ Tidak Ada ***")
+    else:
+        print("\nUpdate Laporan Stock Barang PT. XYZ\n")
+        for value in Dict.values():
+            print(printFormat.format("", *value))
+
 
 # Fungsi menjalankan menu nomor 1 Report Stock Gudang (Read)
 def report():
@@ -40,7 +45,7 @@ def report():
 
 # Fungsi menjalankan menu nomor 1.2 Menampilkan Data Tertentu Di Gudang
 def showDataUnique():
-    inputNamaBarang = pypi.inputStr(prompt="Masukan Nama Barang Yang Dicari : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+    inputNamaBarang = pypi.inputStr(prompt="Masukan Nama Barang Yang Dicari : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
     for i, value in enumerate(dictStockGdg.values()):
         if inputNamaBarang in value:
             print("-----Info Barang Yang Dicari-----")
@@ -50,6 +55,7 @@ def showDataUnique():
             print(f"***Barang {inputNamaBarang} tidak dapat ditemukan***")
             report()
         
+
 # Fungsi menjalankan menu nomor 2 Menambah Barang Baru Di Gudang
 def add():
     while True:
@@ -65,7 +71,7 @@ def add():
         
         # Pilihan Menjalankan Menu Tambah barang baru di data stock gudang
         if menuAdd == 1:
-            addBarang = pypi.inputStr(prompt="Masukan nama barang yang ingin ditambahkan : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            addBarang = pypi.inputStr(prompt="Masukan nama barang yang ingin ditambahkan : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
             for i, value in enumerate(dictStockGdg.copy().values()):
                 if addBarang in value:
                     print(f"***{addBarang} sudah ada di dalam database***")
@@ -124,7 +130,8 @@ def add():
         # Pilihan Menjalankan Menu Kembali ke menu utama
         elif menuAdd == 3 :
             main()
-            
+
+
 # Fungsi menjalankan menu nomor 3 Transaksi Stock Gudang
 def transaksi():
     while True:
@@ -141,7 +148,7 @@ def transaksi():
         
         # Pilihan Menjalankan Menu Menambah jumlah barang di gudang
         if menuTransaksi == 1:
-            barangTransaksiIn = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di ditambah stocknya : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            barangTransaksiIn = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di ditambah stocknya : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
             for i, value in enumerate(dictStockGdg.values()):
                 if barangTransaksiIn in value:
                     print("----- Info Barang Yang Akan ditambah Stocknya -----")
@@ -170,7 +177,7 @@ def transaksi():
 
         # Pilihan Menjalankan Menu Mengurangi jumlah barang di gudang   
         elif menuTransaksi == 2:
-            barangTransaksiOut = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di dikurangi stocknya : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            barangTransaksiOut = pypi.inputStr(prompt="\nMasukan nama barang yang ingin di dikurangi stocknya : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
             for i, value in enumerate(dictStockGdg.values()):
                 if barangTransaksiOut in value:
                     print("----- Info Barang Yang akan dikurangi Stocknya -----")
@@ -208,6 +215,7 @@ def transaksi():
         # Pilihan Menu Menjalankan Kembali ke menu utama
         elif menuTransaksi == 4:
             main()
+
 
 # Fungsi menjalankan menu nomor 4 Menghapus Barang Lama Gudang
 def delete():
@@ -265,6 +273,7 @@ def delete():
         elif menuDelete == 3 :
             main()
 
+
 # Fungsi menjalankan menu nomor 5 Settings
 def settings():
     while True:
@@ -314,7 +323,7 @@ def settingPetugasGudang():
             for i in range(len(petugasGudang)):
                 print(f"Petugas-{i+1} : {petugasGudang[i]}")
             noEditPetugas = pypi.inputInt(prompt="No petugas yang ingin diedit : ", lessThan=len(petugasGudang)+1)
-            namaPetugasEdit = pypi.inputStr(prompt="Masukan nama petugas baru : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            namaPetugasEdit = pypi.inputStr(prompt="Masukan nama petugas baru : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
             yakinEditPetugas = pypi.inputYesNo(prompt=f"Apakah anda yakin merubah {petugasGudang[noEditPetugas-1]} menjadi {namaPetugasEdit} ? (YES/NO) : ")
             if yakinEditPetugas == "yes":
                 petugasGudang[noEditPetugas-1] = namaPetugasEdit
@@ -324,7 +333,7 @@ def settingPetugasGudang():
 
         # Pilihan Menambah Petugas Baru
         elif settingPetugas == 3:
-            nambahPetugas = pypi.inputStr(prompt="Masukan nama petugas gudang baru : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            nambahPetugas = pypi.inputStr(prompt="Masukan nama petugas gudang baru : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
             if nambahPetugas in petugasGudang:
                 print(f"*** Nama petugas {nambahPetugas} sudah ada dalam database ***")
                 settingPetugasGudang()
@@ -341,7 +350,7 @@ def settingPetugasGudang():
             print("\nNama Petugas Gudang Terdaftar : ")
             for i in range(len(petugasGudang)):
                 print(f"Petugas-{i+1} : {petugasGudang[i]}")
-            hapusPetugas = pypi.inputStr(prompt="Masukan nama petugas yang ingin dihapus : ", applyFunc=lambda x: x.title(), blockRegexes="0123456789")
+            hapusPetugas = pypi.inputStr(prompt="Masukan nama petugas yang ingin dihapus : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
             if hapusPetugas in petugasGudang:
                 yakinHapusPetugas = pypi.inputYesNo(prompt=f"Apakah anda yakin menghapus {hapusPetugas} dari database gudang ? (YES/NO) : ")
                 if yakinHapusPetugas == "yes":
@@ -389,7 +398,7 @@ def settingBasisKodeBarang():
             for i in range(len(listKodeBarang)):
                 print(f"KodeBarang-{i+1} : {listKodeBarang[i]}")
             noEditBasisKode = pypi.inputInt(prompt="No basis kode yang ingin diedit : ", lessThan=len(listKodeBarang)+1)
-            namaBasisKodeEdit = pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
+            namaBasisKodeEdit = pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes=[r"[0-9]"])
             yakinEditBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin merubah basis kode {listKodeBarang[noEditBasisKode-1]} menjadi {namaBasisKodeEdit} ? (YES/NO) : ")
             if yakinEditBasisKode == "yes":
                 listKodeBarang[noEditBasisKode-1] = namaBasisKodeEdit
@@ -400,7 +409,7 @@ def settingBasisKodeBarang():
         # Pilihan Menambah Basis Kode Barang Baru
         elif settingKode == 3:
             print("## Panjang karakter basis kode baru kurang dari 5 termasuk karakter strip (-)")
-            nambahBasisKode= pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
+            nambahBasisKode= pypi.inputStr(prompt="Masukan nama basis kode baru : ", applyFunc=lambda x: x.upper(), blockRegexes=[r"[0-9]"])
             if nambahBasisKode in listKodeBarang:
                 print(f"*** Basis Kode {nambahBasisKode} sudah ada dalam database ***")
                 settingBasisKodeBarang()
@@ -420,7 +429,7 @@ def settingBasisKodeBarang():
             print("\nNama Basis Kode Barang Terdaftar : ")
             for i in range(len(listKodeBarang)):
                 print(f"KodeBarang-{i+1} : {listKodeBarang[i]}")
-            hapusBasisKode = pypi.inputStr(prompt="Masukan nama basis kode yang ingin dihapus : ", applyFunc=lambda x: x.upper(), blockRegexes="0123456789")
+            hapusBasisKode = pypi.inputStr(prompt="Masukan nama basis kode yang ingin dihapus : ", applyFunc=lambda x: x.upper(), blockRegexes=[r"[0-9]"])
             if hapusBasisKode in listKodeBarang:
                 yakinHapusBasisKode = pypi.inputYesNo(prompt=f"Apakah anda yakin menghapus {hapusBasisKode} dari database gudang ? (YES/NO) : ")
                 if yakinHapusBasisKode == "yes":
@@ -438,6 +447,7 @@ def settingBasisKodeBarang():
         # Pilihan Untuk Langsung Kembali Ke Menu Utama
         elif settingKode == 6:
             main()
+
 
 # Fungsi menampilkan Menu Utama
 def main():
@@ -483,28 +493,6 @@ def main():
             print("\n~~~~Terimakasih~~~~\nProgram made by : fathurizkym")
             sys.exit()
 
-# Fungsi Start Program
-def start():
-    startProgram = pypi.inputYesNo(prompt="Jalankan program? (YES/NO) : ")
-    if startProgram == "yes":
-        if len(dictStockGdg) == 0:
-            print("Tidak ada data untuk diproses")
-        else:
-            while True:
-                inputPtgs = pypi.inputStr(
-                    prompt="\nMasukan Nama Petugas Jaga : ",
-                    applyFunc=lambda x: x.title(),
-                    blockRegexes="0123456789")
-                if inputPtgs in petugasGudang:
-                    print(f"\nLogin sukses\nNama petugas gudang : {inputPtgs}")
-                    heading(inputPtgs)
-                    main()
-                    break
-                else:
-                    print(f"Nama anda ({inputPtgs}) tidak ada dalam database petugas gudang kami")
-                    print(f"Silahkan minta izin ke petugas gudang kami : \n{petugasGudang}")
-    elif startProgram == "no":
-        sys.exit()
 
 if __name__ == "__main__":
     # Dictionary stock Gudang
@@ -531,4 +519,16 @@ if __name__ == "__main__":
 
     printFormat = '{:<1}' + '{:<15}' * (len(dictStockGdg["column"]))
 
-    start()
+    while True:
+        inputPtgs = pypi.inputStr(
+            prompt="\nMasukan Nama Petugas Jaga : ",
+            applyFunc=lambda x: x.title(),
+            blockRegexes="0123456789")
+        if inputPtgs in petugasGudang:
+            print(f"\nLogin sukses\nNama petugas gudang : {inputPtgs}")
+            heading(inputPtgs)
+            main()
+            break
+        else:
+            print(f"Nama anda ({inputPtgs}) tidak ada dalam database petugas gudang kami")
+            print(f"Silahkan minta izin ke petugas gudang kami : \n{petugasGudang}")
