@@ -13,6 +13,7 @@ def heading(nama):
     print(f"\nTanggal : {dt.date.today()} \nPetugas Gudang : {nama}")
 
 # Fungsi menampilkan update stock gudang 
+
 def show(dbStockGudang):
     if len(dbStockGudang) <= 1 or "column" not in dbStockGudang.keys():
         print("*** Data Stock Gudang Kosong/ Tidak Ada ***")
@@ -21,13 +22,12 @@ def show(dbStockGudang):
         data = list(dbStockGudang.values())[1:]
         header = dbStockGudang['column']
         print(tabulate.tabulate(data, header, tablefmt="outline"))
-        print("\n")
 
 
 # Fungsi menjalankan menu nomor 1 Report Stock Gudang (Read)
 def report():
     while True:
-        print("""
+        print("""\n
 ---------- Menu Report Stock Gudang ----------
         
     Pilihan menu report stock gudang : 
@@ -50,7 +50,8 @@ def showDataUnique():
     for i, value in enumerate(dbStockGudang.values()):
         if inputNamaBarang in value:
             print("----- Info Barang Yang Dicari -----")
-            print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTransaction Date : {value[7]}\n""")
+            print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTanggal\t\t : {value[7]}""")
+            print("-" * 35)
             break
         elif i == len(dbStockGudang) - 1:
             print(f"*** Barang {inputNamaBarang} tidak dapat ditemukan ***")
@@ -60,7 +61,7 @@ def showDataUnique():
 # Fungsi menjalankan menu nomor 2 Menambah Barang Baru Di Gudang (Create, Read)
 def add():
     while True:
-        menuAdd = pypi.inputInt(prompt="""
+        menuAdd = pypi.inputInt(prompt="""\n
 ---------- Menu Menambah Barang Baru Di Data Stock Gudang ----------
          
     Pilihan menu menambah barang baru di data stock gudang : 
@@ -90,7 +91,7 @@ def add():
                                 add()
                                 break
                             elif i == len(dbStockGudang)-1:
-                                if kodeBarang[0:4] in listKodeBarang and (kodeBarang[4]) in ["0","1","2","3","4","5","6","7","8","9"]:
+                                if kodeBarang[0:4] in listKodeBarang and (kodeBarang[4]) in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
                                     print(f"Nama Barang  : {addBarang}")
                                     stockAdd = pypi.inputNum(prompt="Stock Barang : ")
                                     yakin = pypi.inputYesNo(prompt="Apakah anda yakin menambah data diatas? (YES/NO) : ")
@@ -114,7 +115,7 @@ def add():
                                     elif yakin == "no":
                                         add()
                                 else:
-                                    print(f"  *** Kode barang ({kodeBarang[0:4]}) belum terdaftar di sistem kami ***\n  *** Basis kode yang tersedia : {listKodeBarang} ***")
+                                    print(f"  *** Kode barang tidak sesuai/ belum terdaftar di sistem kami ***\n  *** Basis kode yang tersedia : {listKodeBarang} ***")
                                     print(f"## Apakah anda tetap ingin menambah barang dengan kode tersebut?")
                                     gotoSettings = pypi.inputYesNo(prompt=f"""## Jika iya, maka anda akan diarahkan menuju menu "Settings Basis Kode Barang" (YES/NO) : """)
                                     if gotoSettings == "yes":
@@ -135,7 +136,7 @@ def add():
 # Fungsi menjalankan menu nomor 3 Transaksi Stock Gudang (Update, Read)
 def transaksi():
     while True:
-        menuTransaksi = pypi.inputInt("""
+        menuTransaksi = pypi.inputInt("""\n
 ---------- Menu Transaksi Barang Stock Gudang ----------
         
     Pilihan menu transaksi barang stock gudang : 
@@ -153,6 +154,7 @@ def transaksi():
                 if barangTransaksiIn in value:
                     print("----- Informasi Barang Yang Akan Dilakukan Transaksi (Stock IN) -----")
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTanggal\t\t : {value[7]}""")
+                    print("-" * 70)
                     yakinTransaksi = pypi.inputYesNo(prompt="Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
                     if yakinTransaksi == "yes":
                         transaksiIn = pypi.inputNum(prompt="Jumlah barang masuk (Stock IN) : ", blockRegexes="-")
@@ -182,6 +184,7 @@ def transaksi():
                 if barangTransaksiOut in value:
                     print("----- Informasi Barang Yang Akan Dilakukan Transaksi (Stock OUT) -----")
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTanggal\t\t : {value[7]}""")
+                    print("-" * 70)
                     yakinTransaksi = pypi.inputYesNo("Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
                     if yakinTransaksi == "yes":
                         transaksiOut = pypi.inputNum(prompt="Jumlah barang keluar (Stock OUT) : ", blockRegexes="-")
@@ -221,7 +224,7 @@ def transaksi():
 def delete():
     print("\n*** Menu ini akan satu data secara keseluruhan ***")
     while True:
-        menuDelete = pypi.inputInt("""
+        menuDelete = pypi.inputInt("""\n
 ----------Menu Menambahkan Stock Gudang----------
         
     Pilihan menu menambahkan stock gudang : 
@@ -239,6 +242,7 @@ def delete():
                 if noDelete in value:
                     print("----- Info Barang Yang Akan dihapus -----")
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTanggal\t\t : {value[7]}""")
+                    print("-" * 35)
                     yakinDelete = pypi.inputYesNo(prompt="Apakah anda yakin akan menghapus data diatas? (YES/NO) : ")
                     if yakinDelete == "yes":
                         del dbStockGudang[f"item-{noDelete}"]
@@ -277,7 +281,7 @@ def delete():
 # Fungsi menjalankan menu nomor 5 Settings (Create, Read, Update, Delete)
 def settings():
     while True:
-        menuSettings = pypi.inputInt("""
+        menuSettings = pypi.inputInt("""\n
 ---------- Menu Settings Data Stock Gudang ----------
         
     Pilihan menu settings data stock gudang : 
@@ -297,7 +301,7 @@ def settings():
 # Fungsi menjalankan menu nomor 5.1 Setting Petugas Gudang (Create, Read, Update, Delete)
 def settingPetugasGudang():
     while True:
-        settingPetugas = pypi.inputInt("""
+        settingPetugas = pypi.inputInt("""\n
 ---------- Menu Settings Petugas Gudang ----------
         
     Pilihan menu settings petugas gudang : 
@@ -372,7 +376,7 @@ def settingPetugasGudang():
 # Fungsi menjalankan menu nomor 5.2 Setting Basis Kode Barang (Create, Read, Update, Delete)
 def settingBasisKodeBarang():
     while True:
-        settingKode = pypi.inputInt("""
+        settingKode = pypi.inputInt("""\n
 ---------- Menu Settings Basis Kode Barang ----------
         
     Pilihan menu settings basis kode barang : 
@@ -558,13 +562,13 @@ if __name__ == "__main__":
     with open("D:\Purwadhika JCDS\Capstone Project\Modul 1\data_petugas_gudang.csv", "r") as importPetugasGudang:
         readerPetugasGudang = csv.reader(importPetugasGudang, delimiter=",")
         for listPetugasGudang in readerPetugasGudang:
-            print(listPetugasGudang)
+            listPetugasGudang
 
     # Import Database Basis Kode Barang Dari File CSV
     with open("D:\Purwadhika JCDS\Capstone Project\Modul 1\data_basis_kode_barang.csv", "r") as importBasisKode:
         readerBasisKode = csv.reader(importBasisKode, delimiter=",")
         for listKodeBarang in readerBasisKode:
-            print(listKodeBarang)
+            listKodeBarang
 
     # Menjalankan Program
     while True:
