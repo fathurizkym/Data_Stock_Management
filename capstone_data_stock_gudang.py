@@ -5,6 +5,7 @@ import sys
 import datetime as dt
 import pyinputplus as pypi
 import csv
+import tabulate
 
 # Fungsi menampilkan tanggal sekarang dan petugas gudang 
 def heading(nama):
@@ -12,13 +13,15 @@ def heading(nama):
     print(f"\nTanggal : {dt.date.today()} \nPetugas Gudang : {nama}")
 
 # Fungsi menampilkan update stock gudang 
-def show(Dict, printFormat):
+def show(dbStockGudang):
     if len(dbStockGudang) <= 1 or "column" not in dbStockGudang.keys():
         print("*** Data Stock Gudang Kosong/ Tidak Ada ***")
     else:
         print("\n===== Update Laporan Stock Barang PT. XYZ =====\n")
-        for value in Dict.values():
-            print(printFormat.format("", *value))
+        data = list(dbStockGudang.values())[1:]
+        header = dbStockGudang['column']
+        print(tabulate.tabulate(data, header, tablefmt="outline"))
+        print("\n")
 
 
 # Fungsi menjalankan menu nomor 1 Report Stock Gudang (Read)
@@ -35,7 +38,7 @@ def report():
 
         menuReportGdg = pypi.inputInt(prompt="Masukan Nomor Pilihan (1-3) : ", lessThan=4)
         if menuReportGdg == 1:
-            show(dbStockGudang, printFormat)
+            show(dbStockGudang)
         elif menuReportGdg == 2:
             showDataUnique()
         elif menuReportGdg == 3:
@@ -122,7 +125,7 @@ def add():
 
         # Pilihan Menjalankan Menu Menampilkan semua data stock gudang (Read)
         elif menuAdd == 2 :
-            show(dbStockGudang, printFormat)   
+            show(dbStockGudang)   
 
         # Pilihan Menjalankan Menu Kembali ke menu utama
         elif menuAdd == 3 :
@@ -152,7 +155,7 @@ def transaksi():
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTanggal\t\t : {value[7]}""")
                     yakinTransaksi = pypi.inputYesNo(prompt="Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
                     if yakinTransaksi == "yes":
-                        transaksiIn = pypi.inputNum(prompt="Jumlah barang masuk (Stock IN) : ")
+                        transaksiIn = pypi.inputNum(prompt="Jumlah barang masuk (Stock IN) : ", blockRegexes="-")
                         dbStockGudang.update({
                             f"item-{value[0]}" : [
                                 value[0],
@@ -181,7 +184,7 @@ def transaksi():
                     print(f"""Index\t\t : {value[0]}\nKode Barang\t : {value[1]}\nNama Barang\t : {value[2]}\nStock Awal\t : {value[3]}\nStock In\t : {value[4]}\nStock Out\t : {value[5]}\nStock Akhir\t : {value[6]}\nTanggal\t\t : {value[7]}""")
                     yakinTransaksi = pypi.inputYesNo("Apakah anda yakin ingin melakukan transaksi barang diatas? (YES/NO) : ")
                     if yakinTransaksi == "yes":
-                        transaksiOut = pypi.inputNum(prompt="Jumlah barang keluar (Stock OUT) : ")
+                        transaksiOut = pypi.inputNum(prompt="Jumlah barang keluar (Stock OUT) : ", blockRegexes="-")
                         if transaksiOut + value[5] <= value[3] + value[4] :
                             dbStockGudang.update({
                                 f"item-{value[0]}" : [
@@ -207,7 +210,7 @@ def transaksi():
 
         # Pilihan Menjalankan Menu Menampilkan semua data stock di gudang (Read)
         elif menuTransaksi == 3:
-            show(dbStockGudang, printFormat)
+            show(dbStockGudang)
 
         # Pilihan Menu Menjalankan Kembali ke menu utama
         elif menuTransaksi == 4:
@@ -230,7 +233,7 @@ def delete():
         
         # Pilihan Menjalankan Menu Hapus Data Stock Gudang 
         if menuDelete == 1:
-            show(dbStockGudang, printFormat)
+            show(dbStockGudang)
             noDelete = pypi.inputNum("\nMasukan nomor barang yang ingin dihapus keseluruhan : ")
             for i, value in enumerate(dbStockGudang.values()):
                 if noDelete in value:
@@ -264,7 +267,7 @@ def delete():
         
         # Pilihan Menjalankan Menu Menampilkan semua data stock di gudang
         elif menuDelete == 2 :
-            show(dbStockGudang, printFormat) 
+            show(dbStockGudang) 
 
         # Pilihan Menjalankan Menu Kembali Ke Menu Utama       
         elif menuDelete == 3 :
@@ -563,15 +566,9 @@ if __name__ == "__main__":
         for listKodeBarang in readerBasisKode:
             print(listKodeBarang)
 
-    # Print Format
-    printFormat = '{:<1}' + '{:<15}' * (len(dbStockGudang["column"]))
-
     # Menjalankan Program
     while True:
-        inputPtgs = pypi.inputStr(
-            prompt="\nMasukan Nama Petugas Jaga : ",
-            applyFunc=lambda x: x.title(),
-            blockRegexes=[r"[0-9]"])
+        inputPtgs = pypi.inputStr(prompt="\nMasukan Nama Petugas Jaga : ", applyFunc=lambda x: x.title(), blockRegexes=[r"[0-9]"])
         if inputPtgs in listPetugasGudang:
             print(f"\nLogin sukses\nNama petugas gudang : {inputPtgs}")
             heading(inputPtgs)

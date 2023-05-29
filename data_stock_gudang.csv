@@ -1,5 +1,4 @@
 Index;Kode_Barang;Nama_Barang;Stock_Awal;Stock_In;Stock_Out;Stock_Akhir;date
-0;LQD-8;Air;5;0;0;5;29-05-2023
-1;GAS-3;Hidrogen;30;0;0;30;29-05-2023
-2;LQD-9;Air Raksa;10;0;0;10;28/05/2023
-3;SLD-1;Kaca;5;0;0;5;29/05/2023
+0;LQD-8;Air;15;0;0;15;29-05-2023
+1;GAS-3;Hidrogen;15;0;0;15;29-05-2023
+2;SLD-1;Kaca;15;0;0;15;29-05-2023
