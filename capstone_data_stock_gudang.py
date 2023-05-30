@@ -457,7 +457,7 @@ def settingBasisKodeBarang():
             main()
 
 
-# Fungsi menampilkan Menu Utama
+# Fungsi menampilkan Menu Utama  
 def main():
     while True:
         print(
