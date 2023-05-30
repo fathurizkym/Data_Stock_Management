@@ -522,12 +522,12 @@ def main():
             fileStockGudang.close()
 
             # Export Database Petugas Gudang Ke File CSV
-            with open("D:\Purwadhika JCDS\Capstone Project\Modul 1\data_petugas_gudang.csv", "w", newline="") as exportPetugasGudang:
+            with open("D:\Purwadhika JCDS\Capstone Project\Modul-1\data_petugas_gudang.csv", "w", newline="") as exportPetugasGudang:
                 writerPetugasGudang = csv.writer(exportPetugasGudang)
                 writerPetugasGudang.writerow(listPetugasGudang)
             
             # Export Database Petugas Gudang Ke File CSV
-            with open("D:\Purwadhika JCDS\Capstone Project\Modul 1\data_basis_kode_barang.csv", "w", newline="") as exportBasisKode:
+            with open("D:\Purwadhika JCDS\Capstone Project\Modul-1\data_basis_kode_barang.csv", "w", newline="") as exportBasisKode:
                 writerBasisKode = csv.writer(exportBasisKode)
                 writerBasisKode.writerow(listKodeBarang)
             
@@ -535,7 +535,7 @@ def main():
 
 if __name__ == "__main__":
     # Import Database Stock Gudang Dari File CSV
-    pathStockGudang = "D:\Purwadhika JCDS\Capstone Project\Modul 1\data_stock_gudang.csv"
+    pathStockGudang = "D:\Purwadhika JCDS\Capstone Project\Modul-1\data_stock_gudang.csv"
 
     fileStockGudang = open(pathStockGudang)
     readerStockGudang = csv.reader(fileStockGudang, delimiter=";")
@@ -559,13 +559,13 @@ if __name__ == "__main__":
         )
 
     # Import Database Petugas Gudang Dari File CSV
-    with open("D:\Purwadhika JCDS\Capstone Project\Modul 1\data_petugas_gudang.csv", "r") as importPetugasGudang:
+    with open("D:\Purwadhika JCDS\Capstone Project\Modul-1\data_petugas_gudang.csv", "r") as importPetugasGudang:
         readerPetugasGudang = csv.reader(importPetugasGudang, delimiter=",")
         for listPetugasGudang in readerPetugasGudang:
             listPetugasGudang
 
     # Import Database Basis Kode Barang Dari File CSV
-    with open("D:\Purwadhika JCDS\Capstone Project\Modul 1\data_basis_kode_barang.csv", "r") as importBasisKode:
+    with open("D:\Purwadhika JCDS\Capstone Project\Modul-1\data_basis_kode_barang.csv", "r") as importBasisKode:
         readerBasisKode = csv.reader(importBasisKode, delimiter=",")
         for listKodeBarang in readerBasisKode:
             listKodeBarang
