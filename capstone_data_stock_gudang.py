@@ -13,7 +13,6 @@ def heading(nama):
     print(f"\nTanggal : {dt.date.today()} \nPetugas Gudang : {nama}")
 
 # Fungsi menampilkan update stock gudang 
-
 def show(dbStockGudang):
     if len(dbStockGudang) <= 1 or "column" not in dbStockGudang.keys():
         print("*** Data Stock Gudang Kosong/ Tidak Ada ***")
@@ -457,7 +456,7 @@ def settingBasisKodeBarang():
             main()
 
 
-# Fungsi menampilkan Menu Utama  
+# Fungsi menampilkan Menu Utama
 def main():
     while True:
         print(
